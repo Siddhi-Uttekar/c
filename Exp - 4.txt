@@ -1,0 +1,116 @@
+﻿Exp - 4
+
+
+1. Create ec2 instance of ubuntu
+2. Edit security group allow inbound tcp -> 3000 -> anywhere
+3. Connect the instance
+
+
+-sudo apt update
+-sudo apt install nodejs npm -y
+-mkdir my-node-app
+- cd my-node-app
+- npm init -y
+- nano index.js
+
+
+//code 
+const http = require('http');
+
+
+const server = http.createServer((req, res) => {
+  res.end("Hello from EC2 Node.js Server 🚀");
+});
+
+
+const PORT = 3000;
+
+
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+
+4. node index.js
+5. http://<your-ec2-public-ip>:3000
+
+
+
+
+
+
+//option 2
+1. Open a terminal on your local machine. Navigate to the directory where your mykey.pem file is saved. Connect via SSH:
+     ssh -i “mykey.pem” ec2-user@ec2-public-ip
+
+
+📁 Folder structure example:
+my-node-app/
+├── index.js
+└── package.json
+
+
+📄 index.js:
+
+
+const http = require("http");
+
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/plain");
+  res.end("Hello from EC2 Node.js Server 🚀");
+});
+
+
+server.listen(3000, "0.0.0.0", () => {
+  console.log("Server running on http://0.0.0.0:3000");
+});
+
+
+📄 Create package.json:
+cd my-node-app
+npm init -y
+
+
+________________
+
+
+✅ 2. Connect to Ubuntu EC2 from Local Terminal
+
+
+ssh -i "your-key.pem" ubuntu@<YOUR_EC2_PUBLIC_IP>
+
+
+________________
+
+
+✅ 3. Install Node.js on EC2 Ubuntu
+Once connected to EC2 terminal:
+
+
+sudo apt update
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+
+
+________________
+
+
+✅ 4. Copy Local Project to EC2
+On your local machine terminal:
+scp -i "your-key.pem" -r ./my-node-app ubuntu@<YOUR_EC2_PUBLIC_IP>:/home/ubuntu/
+
+
+________________
+
+
+✅ 5. Run Your Node App on EC2
+Back in the EC2 terminal:
+bash
+CopyEdit
+cd my-node-app
+node index.js
+
+
+http://<YOUR_EC2_PUBLIC_IP>:3000
