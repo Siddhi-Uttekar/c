@@ -1,0 +1,55 @@
+﻿Exp - 9
+
+
+Make sure to keep open docker desktop and running
+
+
+PS C:\Users\uttek>    cd Desktop
+PS C:\Users\uttek\Desktop>    mkdir my-static-web
+    C:\Users\uttek\Desktop> cd my-static-web
+
+
+In vscode or notepad create
+1.index.html
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> this is my website !!</h1>
+</body>
+</html>
+
+
+
+
+2. Dockerfile
+FROM nginx:alpine
+RUN rm -rf /usr/share/nginx/html/*
+COPY . /usr/share/nginx/html
+
+
+1. docker build -t my-static-web .
+
+
+2. docker run -d -p 8080:80 --name static-web my-static-web
+                   Or
+docker run -p 8080:80 my-static-web
+
+
+3. Open http://localhost:8080 in your browser.
+4. Docker images
+
+
+//
+docker login -u siddhii02
+ docker tag my-static-web siddhii02/my-static-web:latest
+docker push siddhii02/my-static-web
+
+
+ docker pull siddhii02/my-static-web:latest or search on docker hub - https://hub.docker.com/r/siddhii02/my-static-web
