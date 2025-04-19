@@ -1,0 +1,52 @@
+﻿Exp - 11
+
+
+1. Create 2 vpcs with CIDR
+-12.0.0.0/16
+-13.0.0.0/16
+
+
+2. Create route table for both vpcs
+3. Create subnets for both vpcs - subnet name, zone, 12.0.1.0/24 and 13.0.1.0/24
+4. Associate route table with subnets! (both VPCS)
+Route Table -> select VPC -> subnet association -> edit subnet -> choose subnet ->save
+
+
+5. Create internet gateway for both vpc then -> Actions -> attach vpc (for both)
+6. Route table -> select -> edit routes -> add route
+* 0.0.0.0/0
+* Internet gateway – Ig-vpc-1 
+* repeat for 2
+
+
+7. Create ec2 instance for both
+* Download key-pair file
+* Network settings -> edit -> select vpc1-> subnet -> enable
+* Add one more security group - Type - Http, source type - Anywhere
+* Advanced detail
+#!/bin/bash
+yes | sudo apt update
+yes | sudo apt install apache2
+
+
+echo "<h1>Server Details</h1><p><strong>Hostname:</strong> $(hostname)</p><p><strong>IP Address:</strong> $(hostname -I | cut -d' ' -f1)</p>" > /var/www/html/index.html
+
+
+sudo systemctl restart apache2
+
+
+8. Go to VPC -> peering connections -> create
+ -local :  vpc -> vpc1
+- acceptor :  vpc -> vpc2
+- create
+-asks for pending acceptance -> Actions -> accept request
+-select “Modify my route table now” -> 
+ - route table for vpc1 -> edit route -> add destn route(13.0.0.0/16)(peering connection also select id)
+-repeat for 2nd route table
+
+
+9. Connect both ec2 by following ssh client
+– cd to .pem file folder
+– ssh -i "vpc-1-ec2-key.pem" ubuntu@15.206.67.8 
+Copy private ip of ec2 -vpc2
+ – curl 12.0.1.205
